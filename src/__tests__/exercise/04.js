@@ -11,7 +11,23 @@ test('submitting the form calls onSubmit with username and password', () => {
   // accepts the data and assigns submittedData to the data that was submitted
   // 💰 if you need a hand, here's what the handleSubmit function should do:
   // const handleSubmit = data => (submittedData = data)
-  //
+  let submittedData
+  const handleSubmit = data => {
+    submittedData = data
+  }
+  render(<Login onSubmit={handleSubmit} />)
+  const testUserName = 'Adam'
+  const testPassword = 'Sandler'
+  const userName = screen.getByLabelText('Username')
+  const passWord = screen.getByLabelText('Password')
+  userEvent.type(userName, testUserName)
+  userEvent.type(passWord, testPassword)
+  userEvent.click(screen.getByRole('button', {name: 'Submit'}))
+
+  expect(submittedData).toEqual({
+    testUserName,
+    testPassword,
+  })
   // 🐨 render the login with your handleSubmit function as the onSubmit prop
   //
   // 🐨 get the username and password fields via `getByLabelText`
