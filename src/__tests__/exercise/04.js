@@ -16,17 +16,17 @@ test('submitting the form calls onSubmit with username and password', () => {
     submittedData = data
   }
   render(<Login onSubmit={handleSubmit} />)
-  const testUserName = 'Adam'
-  const testPassword = 'Sandler'
+  const username = 'Adam'
+  const password = 'Sandler'
   const userName = screen.getByLabelText('Username')
   const passWord = screen.getByLabelText('Password')
-  userEvent.type(userName, testUserName)
-  userEvent.type(passWord, testPassword)
+  userEvent.type(userName, username)
+  userEvent.type(passWord, password)
   userEvent.click(screen.getByRole('button', {name: 'Submit'}))
 
   expect(submittedData).toEqual({
-    testUserName,
-    testPassword,
+    username,
+    passwordq,
   })
   // 🐨 render the login with your handleSubmit function as the onSubmit prop
   //
