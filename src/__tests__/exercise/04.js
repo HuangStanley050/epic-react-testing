@@ -26,7 +26,7 @@ test('submitting the form calls onSubmit with username and password', () => {
 
   expect(submittedData).toEqual({
     username,
-    passwordq,
+    password,
   })
   // 🐨 render the login with your handleSubmit function as the onSubmit prop
   //

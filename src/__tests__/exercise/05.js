@@ -7,6 +7,7 @@ import {render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import {build, fake} from '@jackfranklin/test-data-bot'
 // 🐨 you'll need to import rest from 'msw' and setupServer from msw/node
+import {rest, setupServer} from 'msw/node'
 import Login from '../../components/login-submission'
 
 const buildLoginForm = build({
@@ -22,11 +23,20 @@ const buildLoginForm = build({
 //   'https://auth-provider.example.com/api/login',
 //   async (req, res, ctx) => {},
 // )
+const server = setupServer(
+  rest.get('/greeting', (req, res, ctx) => {
+    return res(ctx.json({greeting: 'hello there'}))
+  }),
+)
+rest.post('http://localhost:3000/login-submission', async (req, res, ctx) => {})
 // you'll want to respond with an JSON object that has the username.
 // 📜 https://mswjs.io/
 
 // 🐨 before all the tests, start the server with `server.listen()`
 // 🐨 after all the tests, stop the server with `server.close()`
+beforeAll(() => server.listen())
+afterEach(() => server.resetHandlers())
+afterAll(() => server.close())
 
 test(`logging in displays the user's username`, async () => {
   render(<Login />)
