@@ -7,6 +7,10 @@ import Location from '../../examples/location'
 
 // 🐨 set window.navigator.geolocation to an object that has a getCurrentPosition mock function
 
+window.navigator.geolocation = {
+  getCurrentPosition: jest.fn(),
+}
+
 // 💰 I'm going to give you this handy utility function
 // it allows you to create a promise that you can resolve/reject on demand.
 function deferred() {
@@ -27,10 +31,13 @@ function deferred() {
 
 test('displays the users current location', async () => {
   // 🐨 create a fakePosition object that has an object called "coords" with latitude and longitude
+  const fakePosition = {
+    coords: {latitude: 1, longitude: 2},
+  }
   // 📜 https://developer.mozilla.org/en-US/docs/Web/API/GeolocationPosition
   //
   // 🐨 create a deferred promise here
-  //
+  const {promise, resolve, reject} = deferred()
   // 🐨 Now we need to mock the geolocation's getCurrentPosition function
   // To mock something you need to know its API and simulate that in your mock:
   // 📜 https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition
