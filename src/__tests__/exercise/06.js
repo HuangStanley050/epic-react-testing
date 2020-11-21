@@ -48,6 +48,12 @@ test('displays the users current location', async () => {
   // navigator.geolocation.getCurrentPosition(success, error)
   //
   // 🐨 so call mockImplementation on getCurrentPosition
+  window.navigator.geolocation.getCurrentPosition.mockImplementation(
+    callback => {
+      promise.then(() => callback(fakePosition))
+    },
+  )
+  render(<Location />)
   // 🐨 the first argument of your mock should accept a callback
   // 🐨 you'll call the callback when the deferred promise resolves
   // 💰 promise.then(() => {/* call the callback with the fake position */})
@@ -55,10 +61,16 @@ test('displays the users current location', async () => {
   // 🐨 now that setup is done, render the Location component itself
   //
   // 🐨 verify the loading spinner is showing up
+  expect(screen.getByLabelText('loading...')).toBeInTheDocument()
   // 💰 tip: try running screen.debug() to know what the DOM looks like at this point.
   //
   // 🐨 resolve the deferred promise
   // 🐨 wait for the promise to resolve
+  await act(() => {
+    resolve()
+    return promise
+  })
+
   // 💰 right around here, you'll probably notice you get an error log in the
   // test output. You can ignore that for now and just add this next line:
   // act(() => {})
@@ -69,7 +81,14 @@ test('displays the users current location', async () => {
   //
   // 🐨 verify the loading spinner is no longer in the document
   //    (💰 use queryByLabelText instead of getByLabelText)
+  expect(screen.queryByLabelText('loading...')).not.toBeInTheDocument()
   // 🐨 verify the latitude and longitude appear correctly
+  expect(screen.getByText(/latitude/i)).toHaveTextContent(
+    `Latitude: ${fakePosition.coords.latitude}`,
+  )
+  expect(screen.getByText(/longitude/i)).toHaveTextContent(
+    `Longitude: ${fakePosition.coords.longitude}`,
+  )
 })
 
 /*
